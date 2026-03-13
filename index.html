@@ -1,0 +1,276 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konkerstore</title><style>
+:root{
+--bg:#0b0b0c;
+--card:#16161a;
+--text:#ffffff;
+--accent:#25D366;
+--main:#5865F2;
+}
+
+body.light{
+--bg:#f4f4f4;
+--card:#ffffff;
+--text:#111;
+}
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:var(--bg);
+color:var(--text);
+overflow-x:hidden;
+}
+
+/* خلفية متحركة */
+.background{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+background:linear-gradient(120deg,#0b0b0c,#1a1a2e,#0b0b0c);
+background-size:400% 400%;
+animation:bgmove 12s ease infinite;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 30px;
+font-size:20px;
+font-weight:bold;
+}
+
+.logo{font-size:22px}
+
+.container{
+max-width:750px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:var(--card);
+padding:25px;
+border-radius:14px;
+box-shadow:0 10px 30px rgba(0,0,0,.5);
+margin-bottom:25px;
+animation:fadeUp .7s ease;
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(25px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+label{font-size:14px;opacity:.8}
+
+select,input{
+width:100%;
+padding:14px;
+margin-top:10px;
+border-radius:10px;
+border:none;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+transition:.25s;
+}
+
+button:hover{transform:scale(1.05)}
+
+.calc{background:var(--main);color:white}
+
+.whatsapp{
+background:var(--accent);
+color:white;
+font-weight:bold;
+}
+
+.theme{
+background:#333;
+color:white;
+padding:8px 14px;
+border-radius:8px;
+border:none;
+}
+
+.price{
+margin-top:15px;
+font-size:22px;
+font-weight:bold;
+text-align:center;
+}
+
+.payments{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:15px;
+}
+
+.pay{
+background:rgba(255,255,255,0.05);
+padding:12px;
+border-radius:10px;
+text-align:center;
+font-size:14px;
+}
+
+.number{
+margin-top:10px;
+font-size:18px;
+font-weight:bold;
+text-align:center;
+}
+
+.stats{
+display:flex;
+justify-content:space-around;
+text-align:center;
+margin-bottom:20px;
+}
+
+.stat h3{
+margin:0;
+font-size:26px;
+color:var(--main);
+}
+
+.stat p{
+margin:5px 0 0;
+font-size:13px;
+opacity:.8
+}
+
+footer{
+text-align:center;
+padding:20px;
+font-size:13px;
+opacity:.7;
+}
+
+</style></head><body><div class="background"></div><header>
+<div class="logo">Konkerstore</div>
+<button class="theme" onclick="toggleTheme()">تغيير الوضع</button>
+</header><div class="container"><div class="stats">
+<div class="stat">
+<h3 id="orders">0</h3>
+<p>عدد الطلبات</p>
+</div>
+<div class="stat">
+<h3 id="sold">0</h3>
+<p>متابع تم بيعه</p>
+</div>
+<div class="stat">
+<h3>24/7</h3>
+<p>الدعم</p>
+</div>
+</div><div class="card"><h2>طلب متابعين</h2><label>اختر المنصة</label> <select id="platform">
+
+<option value="Instagram">انستجرام</option>
+<option value="TikTok">تيك توك</option>
+<option value="Facebook">فيسبوك</option>
+<option value="YouTube">يوتيوب</option>
+</select><label>اسم المستخدم</label> <input type="text" id="username" placeholder="اكتب اسم المستخدم">
+
+<label>عدد المتابعين</label> <input type="number" id="followers" placeholder="مثال: 1000">
+
+<button class="calc" onclick="calc()">احسب السعر</button>
+
+<div class="price" id="price">السعر سيظهر هنا</div><button class="whatsapp" onclick="order()">اطلب عبر واتساب</button>
+
+</div><div class="card"><h2>طرق الدفع</h2><div class="payments">
+<div class="pay">فودافون كاش</div>
+<div class="pay">انستا باي</div>
+<div class="pay">وي باي</div>
+<div class="pay">اورنج كاش</div>
+</div><div class="number">رقم التحويل: 01275255060</div></div></div><footer>
+© Konkerstore
+</footer><script>
+
+let pricePer1000 = 75
+let lastFollowers = 0
+let lastPrice = 0
+
+function calc(){
+let followers = parseInt(document.getElementById("followers").value)
+
+if(!followers || followers <= 0){
+alert("اكتب عدد المتابعين")
+return
+}
+
+let price = (followers / 1000) * pricePer1000
+
+lastFollowers = followers
+lastPrice = price
+
+document.getElementById("price").innerText = "السعر: " + price + " جنيه"
+}
+
+function order(){
+
+let username = document.getElementById("username").value
+
+if(username === ""){
+alert("اكتب اسم المستخدم")
+return
+}
+
+if(lastFollowers === 0){
+alert("احسب السعر اولا")
+return
+}
+
+let platform = document.getElementById("platform").value
+
+let message = `مرحبا اريد طلب ${lastFollowers} متابع على ${platform}\nاسم المستخدم: ${username}\nالسعر: ${lastPrice} جنيه`
+
+let url = "https://wa.me/qr/XKZHMDB44AXYO1?text=" + encodeURIComponent(message)
+
+window.open(url,"_blank")
+}
+
+function toggleTheme(){
+document.body.classList.toggle("light")
+}
+
+// عداد طلبات وهمي
+let orderCount = 1284
+let soldFollowers = 845932
+
+function updateStats(){
+orderCount += Math.floor(Math.random()*3)
+soldFollowers += Math.floor(Math.random()*200)
+
+document.getElementById("orders").innerText = orderCount
+
+document.getElementById("sold").innerText = soldFollowers.toLocaleString()
+}
+
+setInterval(updateStats,2000)
+updateStats()
+
+</script></body>
+</html>
